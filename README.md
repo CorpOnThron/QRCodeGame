@@ -9,3 +9,4 @@ Game, that is small enough(&lt;2.7kb), to be all written in QR Code
 
 May take few tries to get the url, try to put camera closer to the screen.
 
+![alt text](https://github.com/CorpOnThron/QRCodeGame/blob/main/preview.jpg)
