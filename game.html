@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid white;
+    background-color: white;
+}
+</style>
+</head>
+<body onload="strg()">
+<script>
+var mgp, mob = [],mscr;
+
+strg = () =>  {
+    mgp = new cmpn(30, 30, "red", 10, 120);
+    mgp.grv = 0.05;
+    mscr = new cmpn("30px", "Consolas", "black", 280, 40, "text");
+    mga.start();
+}
+
+var mga = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 480;
+        this.canvas.height = 270;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
+        this.interval = setInterval(updga, 20);
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+function cmpn(w, h, c, x, y, t) {
+    let l = this;
+    l.t = t;
+    l.sc = 0;
+    l.width = w;
+    l.height = h;
+    l.spx = 0;
+    l.spy = 0;    
+    l.x = x;
+    l.y = y;
+    l.grv = 0;
+    l.grsp = 0;
+    l.upd = function() {
+        ctx = mga.context;
+        if (l.t == "text") {
+            ctx.font = l.width + " " + l.height;
+            ctx.fillStyle = c;
+            ctx.fillText(l.text, l.x, l.y);
+        } else {
+            ctx.fillStyle = c;
+            ctx.fillRect(l.x, l.y, l.width, l.height);
+        }
+    }
+    l.nep = function() {
+        l.grsp += l.grv;
+        l.x += l.spx;
+        l.y += l.spy + l.grsp;
+        l.htb();
+    }
+    l.htb = function() {
+        var rcb = mga.canvas.height - l.height;
+        if (l.y > rcb) {
+            l.y = rcb;
+            l.grsp = 0;
+        }
+    }
+    l.crw = function(oobj) {
+        var ml = l.x, mr = l.x + (l.width), mt = l.y, mb = l.y + (l.height), ol = oobj.x, or = oobj.x + (oobj.width), ot = oobj.y, ob = oobj.y + (oobj.height), crsh = true;
+        if ((mb < ot) || (mt > ob) || (mr < ol) || (ml > or)) {
+            crsh = false;
+        }
+        return crsh;
+    }
+}
+
+rn=()=>{
+    return Math.random();
+}
+
+updga = () => {
+    var x, he, gap, minHeight, maxHeight, minGap, maxGap;
+    for (i = 0; i < mob.length; i += 1) {
+        if (mgp.crw(mob[i])) {
+            return;
+        } 
+    }
+    mga.clear();
+    mga.frameNo += 1;
+    if (mga.frameNo == 1 || evi(150)) {
+        x = mga.canvas.width;
+        minHeight = 20;
+        maxHeight = 200;
+        he = Math.floor(rn()*(maxHeight-minHeight+1)+minHeight);
+        minGap = 50;
+        maxGap = 200;
+        gap = Math.floor(rn()*(maxGap-minGap+1)+minGap);
+        mob.push(new cmpn(10, he, "blue", x, 0));
+        mob.push(new cmpn(10, x - he - gap, "blue", x, he + gap));
+    }
+    for (i = 0; i < mob.length; i += 1) {
+        mob[i].x += -1;
+        mob[i].upd();
+    }
+    mscr.text="SCR:"+mga.frameNo;
+    mscr.upd();
+    mgp.nep();
+    mgp.upd();
+}
+
+evi = (n) => {
+    if ((mga.frameNo / n) % 1 == 0) {return true;}
+    return false;
+}
+
+acce = (n) => {
+    mgp.grv = n;
+}
+
+window.addEventListener('touchstart', function onFirstTouch() {
+    acce(-0.2);
+}, false);
+window.addEventListener('touchend', function onFirstTouch() {
+    acce(0.05);
+}, false);
+
+</script>
+</body>
+</html>
